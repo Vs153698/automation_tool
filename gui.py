@@ -9,26 +9,26 @@ class AutomationToolApp:
         self.root.title("Automation Tool")
 
         self.record_button = tk.Button(root, text="Record", command=self.start_recording)
-        self.record_button.pack()
+        self.record_button.pack(side=tk.LEFT)
 
         self.stop_button = tk.Button(root, text="Stop", command=self.stop_recording, state=tk.DISABLED)
-        self.stop_button.pack()
+        self.stop_button.pack(side=tk.LEFT)
 
         self.play_button = tk.Button(root, text="Play", command=self.play_recording, state=tk.DISABLED)
-        self.play_button.pack()
+        self.play_button.pack(side=tk.LEFT)
 
         self.save_button = tk.Button(root, text="Save", command=self.save_recording, state=tk.DISABLED)
-        self.save_button.pack()
+        self.save_button.pack(side=tk.LEFT)
 
         self.load_button = tk.Button(root, text="Load", command=self.load_recording)
-        self.load_button.pack()
+        self.load_button.pack(side=tk.LEFT)
 
-        self.speed_label = tk.Label(root, text="Playback Speed:")
-        self.speed_label.pack()
+        self.speed_label = tk.Label(root, text="Playback Speed (0.1 to 3.0):")
+        self.speed_label.pack(side=tk.LEFT)
 
-        self.speed_scale = tk.Scale(root, from_=0.1, to=3.0, orient=tk.HORIZONTAL, resolution=0.1)
-        self.speed_scale.set(1.0)
-        self.speed_scale.pack()
+        self.speed_entry = tk.Entry(root, width=10)
+        self.speed_entry.insert(0, "1.0")
+        self.speed_entry.pack(side=tk.LEFT)
 
         self.actions = []
 
@@ -46,8 +46,14 @@ class AutomationToolApp:
         self.save_button.config(state=tk.NORMAL)
 
     def play_recording(self):
-        speed = self.speed_scale.get()
-        player.play_actions(self.actions, speed)
+        try:
+            speed = float(self.speed_entry.get())
+            if 0.1 <= speed <= 3.0:
+                player.play_actions(self.actions, speed)
+            else:
+                messagebox.showerror("Invalid Input", "Please enter a value between 0.1 and 3.0.")
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter a valid number.")
 
     def save_recording(self):
         filename = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
