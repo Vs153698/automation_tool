@@ -12,8 +12,8 @@ def play_actions(actions, speed=1.0):
         current_time = action['time']
         sleep_time = (current_time - last_time) / speed
 
-        # Only sleep if the time difference is significant
-        if sleep_time > 0.01:  # You can adjust this threshold
+        # Sleep only if the sleep_time is significant
+        if sleep_time > 0.001:  # Lower threshold to ensure smoothness
             time.sleep(sleep_time)
 
         last_time = current_time
@@ -24,7 +24,7 @@ def play_actions(actions, speed=1.0):
             pyautogui.click(x=action['position'][0], y=action['position'][1], button=action['button'].split('.')[-1])
         elif action['type'] == 'keyboard':
             if action['event_type'] == 'press':
-                pyautogui.press(action['key'])
+                pyautogui.keyDown(action['key'])
             elif action['event_type'] == 'release':
                 pyautogui.keyUp(action['key'])
 
